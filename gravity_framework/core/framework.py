@@ -370,3 +370,16 @@ class GravityFramework:
             Service instance or None if not found
         """
         return self.registry.get_service(name)
+    
+    async def get_all_services(self) -> List[Service]:
+        """
+        Get all registered services.
+        
+        Returns:
+            List of all services
+        """
+        # First try to discover all services if registry is empty
+        if not self.registry.services:
+            self.discover_services()
+        
+        return self.registry.get_all()
