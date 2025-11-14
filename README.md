@@ -172,7 +172,33 @@ recommendations = framework.ai_analyze()
 # → "Recommended: Add API gateway between frontend and backend services"
 ```
 
-### 🔧 Enable AI Features (Easy Setup!)
+### 🔧 AI Setup (ZERO Configuration Required!)
+
+**The framework automatically installs everything for you!**
+
+```python
+from gravity_framework import GravityFramework
+
+# That's it! Just create the framework and AI will auto-install
+framework = GravityFramework(ai_assist=True)  # AI installs automatically!
+
+# First time: Ollama downloads (2-5 min, only once)
+# Next time: Instant - everything ready!
+```
+
+**What happens automatically:**
+1. ✅ Detects if Ollama is installed
+2. ✅ Downloads and installs Ollama if missing
+3. ✅ Downloads AI model (llama3.2:3b - 2GB)
+4. ✅ Starts Ollama service
+5. ✅ Ready to use!
+
+**No manual steps needed!** Just use the framework.
+
+---
+
+<details>
+<summary>🔧 Manual Installation (Optional - if you prefer)</summary>
 
 **Step 1: Install Ollama** (2 minutes)
 ```bash
@@ -202,6 +228,17 @@ ollama pull deepseek-coder:6.7b
 **Step 3: Start Ollama**
 ```bash
 ollama serve
+```
+
+</details>
+
+**Disable Auto-Install (if needed):**
+```python
+# Disable automatic installation
+framework = GravityFramework(
+    ai_assist=True,
+    auto_install_ai=False  # Won't auto-install, will just detect
+)
 ```
 
 **That's it!** Gravity automatically detects and uses Ollama. No API keys, no configuration!

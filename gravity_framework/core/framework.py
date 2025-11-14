@@ -36,7 +36,8 @@ class GravityFramework:
         project_path: Optional[Path] = None,
         config: Optional[Dict] = None,
         ai_assist: bool = True,
-        ollama_model: str = "llama3.2:3b"
+        ollama_model: str = "llama3.2:3b",
+        auto_install_ai: bool = True
     ):
         """
         Initialize the Gravity Framework.
@@ -47,6 +48,7 @@ class GravityFramework:
             config: Optional configuration dictionary
             ai_assist: Enable AI-powered assistance (auto-detects Ollama)
             ollama_model: Ollama model to use (default: llama3.2:3b - fast & free)
+            auto_install_ai: Automatically install Ollama if not found (default: True)
         """
         self.project_path = Path(project_path) if project_path else Path.cwd()
         self.config = config or {}
@@ -56,7 +58,11 @@ class GravityFramework:
         self.scanner = ServiceScanner(self.project_path / "services")
         self.db_orchestrator = DatabaseOrchestrator(self.config.get("databases", {}))
         self.service_manager = ServiceManager()
-        self.ai = AIAssistant(enabled=ai_assist, ollama_model=ollama_model)  # FREE AI with Ollama
+        self.ai = AIAssistant(
+            enabled=ai_assist,
+            ollama_model=ollama_model,
+            auto_install=auto_install_ai
+        )  # FREE AI with auto-install!
         
         self._plugins: Dict[str, Any] = {}
         

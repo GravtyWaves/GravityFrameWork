@@ -12,6 +12,7 @@ Ollama is completely free, runs locally, and supports models like:
 - Qwen 2.5 Coder - Excellent for technical analysis
 
 No API keys, no subscriptions, no internet required after model download!
+Ollama is automatically installed if not present - no manual setup needed!
 """
 
 import logging
@@ -22,6 +23,7 @@ from typing import List, Dict, Optional, Any
 from pathlib import Path
 
 from gravity_framework.models.service import Service
+from gravity_framework.ai.installer import ensure_ollama
 
 logger = logging.getLogger(__name__)
 
@@ -40,28 +42,61 @@ class AIAssistant:
     Install: https://ollama.com/download
     """
     
-    def __init__(self, enabled: bool = True, ollama_model: str = "llama3.2:3b"):
+    def __init__(self, enabled: bool = True, ollama_model: str = "llama3.2:3b", auto_install: bool = True):
         """Initialize AI assistant.
         
         Args:
             enabled: Whether AI assistance is enabled (auto-detects Ollama)
             ollama_model: Ollama model to use (default: llama3.2:3b - fast and free)
+            auto_install: Automatically install Ollama if not found (default: True)
         """
         self.ollama_model = ollama_model
         self.ollama_url = "http://localhost:11434"
-        self.enabled = enabled and self._detect_ollama()
+        self.auto_install = auto_install
+        self.enabled = enabled and self._detect_or_install_ollama()
         self._analysis_cache: Dict[str, Any] = {}
         
         if self.enabled:
-            logger.info(f"🤖 AI Assistant enabled - Ollama ({self.ollama_model}) detected")
+            logger.info(f"🤖 AI Assistant enabled - Ollama ({self.ollama_model}) ready")
         else:
-            logger.warning("⚠️ AI Assistant disabled - install Ollama for FREE: https://ollama.com/download")
+            logger.warning("⚠️ AI Assistant disabled")
     
-    def _detect_ollama(self) -> bool:
-        """Detect if Ollama is running locally.
+    def _detect_or_install_ollama(self) -> bool:
+        """Detect Ollama or install it automatically.
         
         Returns:
             True if Ollama is available
+        """
+        # First, try to detect existing Ollama
+        if self._check_ollama_running():
+            return True
+        
+        # If not found and auto_install is enabled, install it
+        if self.auto_install:
+            logger.info("🤖 Ollama not found. Installing automatically...")
+            logger.info("⏳ First-time setup (takes 2-5 minutes, only once)...")
+            
+            try:
+                if ensure_ollama(self.ollama_model):
+                    logger.info("✓ Ollama installed and ready!")
+                    return True
+                else:
+                    logger.error("Failed to auto-install Ollama")
+                    logger.info("💡 Manual install: https://ollama.com/download")
+                    return False
+            except Exception as e:
+                logger.error(f"Auto-install error: {e}")
+                logger.info("💡 Manual install: https://ollama.com/download")
+                return False
+        else:
+            logger.info("Auto-install disabled. Install manually: https://ollama.com/download")
+            return False
+    
+    def _check_ollama_running(self) -> bool:
+        """Check if Ollama is running and has the required model.
+        
+        Returns:
+            True if Ollama is ready
         """
         try:
             # Check if Ollama is running
@@ -79,13 +114,23 @@ class AIAssistant:
                     logger.info(f"Using available Ollama model: {self.ollama_model}")
                     return True
                 else:
-                    logger.warning(f"Ollama running but no models installed. Run: ollama pull {self.ollama_model}")
+                    # Ollama running but no models - install default model
+                    if self.auto_install:
+                        logger.info(f"Installing default model: {self.ollama_model}")
+                        try:
+                            from gravity_framework.ai.installer import OllamaInstaller
+                            installer = OllamaInstaller()
+                            if installer.download_model(self.ollama_model):
+                                return True
+                        except:
+                            pass
+                    logger.warning(f"Ollama running but no models. Run: ollama pull {self.ollama_model}")
                     return False
                     
         except requests.exceptions.RequestException:
-            logger.debug("Ollama not detected. Install from: https://ollama.com/download")
+            logger.debug("Ollama not running")
         except Exception as e:
-            logger.debug(f"Ollama detection failed: {e}")
+            logger.debug(f"Ollama check failed: {e}")
         
         return False
     
