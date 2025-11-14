@@ -1,0 +1,76 @@
+# Example Service Manifest
+# Place this file as gravity-service.yaml in your service repository
+
+# Basic Information
+name: auth-service
+version: 1.0.0
+description: Authentication and authorization service
+type: api  # Options: api, web, worker, cron, database, cache
+
+# Repository (auto-filled by Gravity)
+repository: https://github.com/your-org/auth-service
+branch: main
+
+# Dependencies on other services
+dependencies:
+  - name: user-service
+    version: ">=1.0.0"
+    optional: false
+  - name: redis-cache
+    version: "^2.0.0"
+    optional: true
+
+# Database Requirements (auto-created by Gravity)
+databases:
+  - name: auth_db
+    type: postgresql  # Options: postgresql, mysql, mongodb, redis
+    version: "15"
+    charset: utf8mb4
+    extensions:
+      - uuid-ossp
+      - pgcrypto
+
+  - name: sessions_cache
+    type: redis
+    version: "7"
+
+# Runtime Configuration
+runtime: python:3.11
+command: uvicorn main:app --host 0.0.0.0 --port 8000
+working_dir: /app
+
+# Port Mappings
+ports:
+  - container: 8000
+    host: 8001  # Optional: auto-assigned if not specified
+    protocol: tcp
+
+# Health Check
+health_check:
+  endpoint: /health
+  interval: 30  # seconds
+  timeout: 5    # seconds
+  retries: 3
+
+# Environment Variables
+environment:
+  variables:
+    LOG_LEVEL: info
+    MAX_WORKERS: 4
+  secrets:
+    - JWT_SECRET
+    - DATABASE_PASSWORD
+
+# API Gateway Configuration
+api_prefix: /api/auth
+public: true  # Expose to internet
+
+# Resource Limits
+cpu_limit: "1.0"      # 1 CPU core
+memory_limit: "512M"  # 512 MB RAM
+
+# Installation
+install_script: scripts/install.sh
+build_args:
+  PYTHON_VERSION: "3.11"
+  BUILD_ENV: production
