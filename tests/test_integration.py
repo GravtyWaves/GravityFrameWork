@@ -70,7 +70,7 @@ class TestIntegrationWorkflows:
         (service_dir / "Dockerfile").write_text("FROM python:3.11\nCMD python main.py")
         
         # Initialize framework
-        framework = GravityFramework(workspace_path=temp_workspace)
+        framework = GravityFramework(project_path=temp_workspace)
         
         # Mock Docker and database operations
         with patch('docker.from_env') as mock_docker, \
@@ -180,7 +180,7 @@ spec:
             service_dir.mkdir()
             (service_dir / "gravity-service.yaml").write_text(content)
         
-        framework = GravityFramework(workspace_path=temp_workspace)
+        framework = GravityFramework(project_path=temp_workspace)
         
         # Discover all services
         for service_dir in temp_workspace.iterdir():
@@ -226,7 +226,7 @@ spec:
         service_dir.mkdir()
         (service_dir / "gravity-service.yaml").write_text(manifest)
         
-        framework = GravityFramework(workspace_path=temp_workspace)
+        framework = GravityFramework(project_path=temp_workspace)
         
         # Discover service
         services = await framework.discover_services(str(service_dir))
@@ -269,7 +269,7 @@ spec:
   command: python main.py
 """)
         
-        framework = GravityFramework(workspace_path=temp_workspace)
+        framework = GravityFramework(project_path=temp_workspace)
         
         # Discover services
         for service_dir in temp_workspace.iterdir():
@@ -312,7 +312,7 @@ spec:
         service_dir.mkdir()
         (service_dir / "gravity-service.yaml").write_text(manifest)
         
-        framework = GravityFramework(workspace_path=temp_workspace)
+        framework = GravityFramework(project_path=temp_workspace)
         
         # Discover service
         await framework.discover_services(str(service_dir))
@@ -343,7 +343,7 @@ spec:
         manifest_file = service_dir / "gravity-service.yaml"
         manifest_file.write_text(sample_manifest_content)
         
-        framework = GravityFramework(workspace_path=temp_workspace)
+        framework = GravityFramework(project_path=temp_workspace)
         
         # Discover initial version
         services = await framework.discover_services(str(service_dir))
@@ -389,7 +389,7 @@ spec:
         service_dir.mkdir()
         (service_dir / "gravity-service.yaml").write_text(manifest)
         
-        framework = GravityFramework(workspace_path=temp_workspace)
+        framework = GravityFramework(project_path=temp_workspace)
         
         # Discover service
         services = await framework.discover_services(str(service_dir))
@@ -425,7 +425,7 @@ spec:
         service_dir.mkdir()
         (service_dir / "gravity-service.yaml").write_text(manifest)
         
-        framework = GravityFramework(workspace_path=temp_workspace)
+        framework = GravityFramework(project_path=temp_workspace)
         await framework.discover_services(str(service_dir))
         
         service = framework.get_service("health-service")
@@ -452,3 +452,4 @@ spec:
             # Check unhealthy
             result2 = await framework.health_check("health-service")
             assert result2 is False
+

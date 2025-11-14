@@ -85,16 +85,25 @@ class TestGravityFramework:
             
             assert result is True
     
-    async def test_status_check(self, tmp_path):
+    def test_status_check(self, tmp_path):
         """Test status check."""
         framework = GravityFramework(project_path=tmp_path)
         
-        with patch.object(framework.service_manager, 'get_status', new_callable=AsyncMock) as mock_status:
-            mock_status.return_value = []
-            
-            status = await framework.status()
-            
-            assert isinstance(status, list)
+        # Add a test service to registry
+        from gravity_framework.models.service import Service, ServiceManifest
+        
+        manifest = ServiceManifest(
+            name="test-service",
+            version="1.0.0",
+            repository="https://github.com/test/test"
+        )
+        service = Service(manifest=manifest)
+        framework.registry.add_service(service)
+        
+        status = framework.status()
+        
+        assert isinstance(status, dict)
+        assert "services" in status
     
     def test_register_plugin(self, tmp_path):
         """Test plugin registration."""

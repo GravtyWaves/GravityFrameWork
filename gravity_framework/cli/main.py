@@ -13,6 +13,7 @@ from typing import Optional, List
 import yaml
 
 from gravity_framework.core.framework import GravityFramework
+from gravity_framework.deployment.composer import DockerComposeGenerator
 
 app = typer.Typer(
     name="gravity",
@@ -209,40 +210,113 @@ def install(
 @app.command()
 def start(
     services: Optional[List[str]] = typer.Argument(None, help="Specific services to start"),
+    detach: bool = typer.Option(True, "--detach/--no-detach", "-d", help="Run in detached mode"),
+    build: bool = typer.Option(False, "--build", "-b", help="Build images before starting"),
 ):
     """
-    Start services in dependency order.
+    Generate docker-compose.yml and start services.
+    
+    This command:
+    1. Generates docker-compose.yml from service manifests
+    2. Generates .env.example file
+    3. Starts all services with docker-compose up
     
     Example:
-        gravity start                    # Start all
-        gravity start auth-service       # Start specific service
-        gravity start auth-service user  # Start multiple services
+        gravity start                    # Start all services
+        gravity start --build            # Rebuild and start
+        gravity start --no-detach        # Start in foreground
     """
     console.print(Panel.fit(
-        "🚀 Starting services...",
+        "🚀 Starting services with Docker Compose...",
         border_style="green"
     ))
     
     try:
+        import subprocess
+        
         framework = get_framework()
+        project_path = Path.cwd()
         
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             console=console,
         ) as progress:
-            task = progress.add_task("Starting services...", total=None)
-            success = asyncio.run(framework.start(services))
-            progress.update(task, completed=True)
+            # Step 1: Get all services
+            task1 = progress.add_task("Loading services...", total=None)
+            all_services = asyncio.run(framework.get_all_services())
+            
+            if not all_services:
+                console.print("[yellow]⚠ No services found. Add services first with 'gravity add'[/yellow]")
+                raise typer.Exit(1)
+            
+            progress.update(task1, completed=True)
+            
+            # Step 2: Generate docker-compose.yml
+            task2 = progress.add_task("Generating docker-compose.yml...", total=None)
+            generator = DockerComposeGenerator()
+            compose_config = asyncio.run(generator.generate(all_services))
+            
+            compose_file = project_path / "docker-compose.yml"
+            asyncio.run(generator.write_file(compose_config, compose_file))
+            
+            console.print(f"✅ Generated: [bold]{compose_file}[/bold]")
+            progress.update(task2, completed=True)
+            
+            # Step 3: Generate .env.example
+            task3 = progress.add_task("Generating .env.example...", total=None)
+            env_content = asyncio.run(generator.generate_env_template(all_services))
+            env_file = project_path / ".env.example"
+            env_file.write_text(env_content)
+            
+            console.print(f"✅ Generated: [bold]{env_file}[/bold]")
+            progress.update(task3, completed=True)
+            
+            # Step 4: Start with docker-compose
+            task4 = progress.add_task("Starting containers...", total=None)
+            
+            # Build docker-compose command
+            cmd = ["docker-compose", "up"]
+            if detach:
+                cmd.append("-d")
+            if build:
+                cmd.append("--build")
+            
+            # Run docker-compose up
+            result = subprocess.run(
+                cmd,
+                cwd=project_path,
+                capture_output=True,
+                text=True
+            )
+            
+            progress.update(task4, completed=True)
         
-        if success:
+        if result.returncode == 0:
             console.print("[green]✅ Services started successfully![/green]")
+            
+            if detach:
+                console.print("\n[bold]Running services:[/bold]")
+                for service in all_services:
+                    console.print(f"  • {service.manifest.name}")
+                
+                console.print("\n[bold]Useful commands:[/bold]")
+                console.print("  • [cyan]docker-compose ps[/cyan]        - View running containers")
+                console.print("  • [cyan]docker-compose logs -f[/cyan]   - View logs")
+                console.print("  • [cyan]gravity stop[/cyan]             - Stop all services")
         else:
             console.print("[red]❌ Failed to start services[/red]")
+            if result.stderr:
+                console.print(f"\n[red]Error output:[/red]\n{result.stderr}")
             raise typer.Exit(1)
             
+    except FileNotFoundError:
+        console.print("[red]❌ Error:[/red] docker-compose not found. Please install Docker and docker-compose")
+        raise typer.Exit(1)
     except Exception as e:
         console.print(f"[red]❌ Error:[/red] {e}")
+        import traceback
+        traceback.print_exc()
         raise typer.Exit(1)
 
 
