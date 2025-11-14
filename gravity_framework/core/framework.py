@@ -12,6 +12,7 @@ from gravity_framework.discovery.scanner import ServiceScanner
 from gravity_framework.resolver.dependency import DependencyResolver
 from gravity_framework.database.orchestrator import DatabaseOrchestrator
 from gravity_framework.core.manager import ServiceManager
+from gravity_framework.ai.assistant import AIAssistant
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class GravityFramework:
         >>> framework.start()
     """
     
-    def __init__(self, project_path: Optional[Path] = None, config: Optional[Dict] = None):
+    def __init__(self, project_path: Optional[Path] = None, config: Optional[Dict] = None, ai_assist: bool = True):
         """
         Initialize the Gravity Framework.
         
@@ -38,6 +39,7 @@ class GravityFramework:
             project_path: Path to the Gravity project directory.
                          If None, uses current directory.
             config: Optional configuration dictionary
+            ai_assist: Enable AI-powered assistance (auto-detects GitHub Copilot)
         """
         self.project_path = Path(project_path) if project_path else Path.cwd()
         self.config = config or {}
@@ -47,6 +49,7 @@ class GravityFramework:
         self.scanner = ServiceScanner(self.project_path / "services")
         self.db_orchestrator = DatabaseOrchestrator(self.config.get("databases", {}))
         self.service_manager = ServiceManager()
+        self.ai = AIAssistant(enabled=ai_assist)  # FREE AI assistance via Copilot
         
         self._plugins: Dict[str, Any] = {}
         
@@ -381,5 +384,94 @@ class GravityFramework:
         # First try to discover all services if registry is empty
         if not self.registry.services:
             self.discover_services()
+        
+        return self.registry.get_all()
+    
+    def ai_analyze(self) -> Dict[str, Any]:
+        """
+        AI-powered analysis of microservices architecture.
+        
+        Uses GitHub Copilot (free) to analyze services and provide:
+        - Connection recommendations
+        - Database schema insights
+        - Optimization suggestions
+        - Architecture best practices
+        
+        Returns:
+            Dictionary with AI analysis results
+            
+        Example:
+            >>> framework = GravityFramework(ai_assist=True)
+            >>> framework.discover_services()
+            >>> analysis = framework.ai_analyze()
+            >>> print(analysis['recommendations'])
+        """
+        services = self.registry.get_all()
+        
+        if not services:
+            return {
+                "error": "No services discovered yet",
+                "suggestion": "Run framework.discover_services() first"
+            }
+        
+        return self.ai.analyze_services(services)
+    
+    def ai_suggest_connections(self) -> List[Dict[str, str]]:
+        """
+        Get AI suggestions for how services should connect (puzzle-solving).
+        
+        AI analyzes services and suggests optimal connections:
+        - API endpoints to call
+        - Authentication patterns
+        - Database access patterns
+        - Service dependencies
+        
+        Returns:
+            List of connection suggestions
+            
+        Example:
+            >>> suggestions = framework.ai_suggest_connections()
+            >>> for conn in suggestions:
+            ...     print(f"{conn['from']} -> {conn['to']}: {conn['method']}")
+        """
+        services = self.registry.get_all()
+        return self.ai.suggest_connections(services)
+    
+    def ai_diagnose(self, error: str, context: Optional[Dict] = None) -> Dict[str, Any]:
+        """
+        AI-powered error diagnosis and troubleshooting.
+        
+        Provides intelligent solutions for common issues.
+        
+        Args:
+            error: Error message to diagnose
+            context: Optional additional context
+            
+        Returns:
+            Diagnosis with suggested solutions
+            
+        Example:
+            >>> diagnosis = framework.ai_diagnose(
+            ...     "Connection refused on port 8000",
+            ...     {"service": "auth-service"}
+            ... )
+            >>> print(diagnosis['solutions'])
+        """
+        return self.ai.diagnose_issue(error, context or {})
+    
+    def ai_optimize_deployment(self) -> Dict[str, Any]:
+        """
+        Get AI recommendations for deployment optimization.
+        
+        Returns:
+            Optimization suggestions for resources, scaling, and performance
+            
+        Example:
+            >>> opts = framework.ai_optimize_deployment()
+            >>> for opt in opts['performance']:
+            ...     print(opt['recommendation'])
+        """
+        services = self.registry.get_all()
+        return self.ai.optimize_deployment(services)
         
         return self.registry.get_all()
