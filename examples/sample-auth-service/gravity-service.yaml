@@ -1,0 +1,192 @@
+# Service Manifest for Gravity Framework
+# This file describes the service metadata, dependencies, and requirements
+
+# === BASIC INFORMATION ===
+apiVersion: gravity/v1
+kind: Service
+metadata:
+  name: sample-auth-service
+  version: 1.0.0
+  description: Complete authentication service with JWT, Redis sessions, and user management
+  author: Gravity Framework Team
+  license: MIT
+
+# === SERVICE SPECIFICATION ===
+spec:
+  # Service type: api, web, worker, cron, database, cache
+  type: api
+  
+  # Repository information
+  repository: https://github.com/your-org/sample-auth-service
+  branch: main
+  
+  # === DEPENDENCIES ===
+  # Other services this service depends on
+  dependencies:
+    # No dependencies for this example
+    # Example:
+    # - name: user-service
+    #   version: ">=1.0.0"
+    #   optional: false
+  
+  # === DATABASE REQUIREMENTS ===
+  # Gravity will automatically create these databases
+  databases:
+    - name: auth_db
+      type: postgresql
+      version: "15"
+      charset: utf8
+      collation: en_US.UTF-8
+      extensions:
+        - uuid-ossp      # UUID generation
+        - pgcrypto       # Password hashing
+    
+    - name: auth_sessions
+      type: redis
+      version: "7"
+  
+  # === RUNTIME CONFIGURATION ===
+  runtime: python:3.11-slim
+  working_dir: /app
+  
+  # Start command
+  command: uvicorn app.main:app --host 0.0.0.0 --port 8001 --workers 4
+  
+  # === PORT CONFIGURATION ===
+  ports:
+    - container: 8001
+      host: 8001        # Optional: auto-assigned if not specified
+      protocol: tcp
+      description: Main HTTP API
+  
+  # === HEALTH CHECK ===
+  health_check:
+    endpoint: /health
+    interval: 30        # seconds
+    timeout: 5          # seconds
+    retries: 3
+    start_period: 10    # seconds
+  
+  # === ENVIRONMENT VARIABLES ===
+  environment:
+    variables:
+      # Application settings
+      APP_NAME: "Auth Service"
+      LOG_LEVEL: info
+      DEBUG: "false"
+      
+      # CORS settings
+      CORS_ORIGINS: "http://localhost:3000,http://localhost:8080"
+      
+      # JWT settings
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRATION: 3600
+      
+      # Session settings
+      SESSION_EXPIRATION: 86400
+      
+      # Rate limiting
+      RATE_LIMIT_PER_MINUTE: 60
+    
+    # Secrets (will be loaded from environment or secrets manager)
+    secrets:
+      - JWT_SECRET
+      - DATABASE_PASSWORD
+      - REDIS_PASSWORD
+  
+  # === API GATEWAY CONFIGURATION ===
+  api:
+    prefix: /api/auth
+    public: true        # Expose to internet
+    
+    # Rate limiting
+    rate_limit:
+      enabled: true
+      requests_per_minute: 100
+      burst: 20
+    
+    # CORS
+    cors:
+      enabled: true
+      allow_origins: ["*"]
+      allow_methods: ["GET", "POST", "PUT", "DELETE"]
+      allow_headers: ["*"]
+  
+  # === RESOURCE LIMITS ===
+  resources:
+    cpu:
+      request: "0.5"    # 0.5 CPU cores
+      limit: "1.0"      # 1.0 CPU cores
+    
+    memory:
+      request: "256M"   # 256 MB
+      limit: "512M"     # 512 MB
+    
+    storage:
+      limit: "1G"       # 1 GB
+  
+  # === INSTALLATION ===
+  installation:
+    # Script to run after cloning (optional)
+    script: scripts/post-install.sh
+    
+    # Build arguments for Docker
+    build_args:
+      PYTHON_VERSION: "3.11"
+      BUILD_ENV: production
+  
+  # === DEPLOYMENT ===
+  deployment:
+    # Deployment strategy
+    strategy: RollingUpdate
+    
+    # Scaling
+    replicas: 2
+    autoscaling:
+      enabled: true
+      min_replicas: 1
+      max_replicas: 10
+      target_cpu_percent: 70
+      target_memory_percent: 80
+    
+    # Probes
+    liveness_probe:
+      endpoint: /health
+      initial_delay: 30
+      period: 10
+    
+    readiness_probe:
+      endpoint: /ready
+      initial_delay: 5
+      period: 5
+  
+  # === MONITORING ===
+  monitoring:
+    # Metrics
+    metrics:
+      enabled: true
+      endpoint: /metrics
+      port: 9090
+    
+    # Logging
+    logging:
+      level: info
+      format: json
+      output: stdout
+    
+    # Tracing
+    tracing:
+      enabled: true
+      service_name: auth-service
+      sample_rate: 0.1
+  
+  # === METADATA ===
+  labels:
+    team: platform
+    component: authentication
+    tier: backend
+  
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9090"
+    prometheus.io/path: "/metrics"

@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: auth_postgres
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: authpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authuser -d auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - auth_network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: auth_redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - auth_network
+
+  # Auth Service
+  auth_service:
+    build: .
+    container_name: auth_service
+    environment:
+      # Application
+      APP_NAME: "Auth Service"
+      DEBUG: "false"
+      LOG_LEVEL: INFO
+      
+      # Service
+      SERVICE_HOST: 0.0.0.0
+      SERVICE_PORT: 8001
+      
+      # Database
+      DATABASE_URL: postgresql+asyncpg://authuser:authpass@postgres:5432/auth_db
+      
+      # Redis
+      REDIS_URL: redis://redis:6379
+      
+      # JWT
+      JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRATION: 3600
+      
+      # CORS
+      CORS_ORIGINS: http://localhost:3000,http://localhost:8080
+      
+      # Session
+      SESSION_EXPIRATION: 86400
+      
+      # Rate limiting
+      RATE_LIMIT_PER_MINUTE: 60
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - auth_network
+    restart: unless-stopped
+
+networks:
+  auth_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
