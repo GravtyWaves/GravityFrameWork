@@ -5,8 +5,10 @@
 **The Ultimate AI-Powered Python Framework for Microservices Orchestration & Autonomous Development**
 
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/GravtyWaves/GravityFrameWork/releases/tag/v1.0.0)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![AI-Powered](https://img.shields.io/badge/AI-Powered-brightgreen.svg)](https://github.com/features/copilot)
+[![AI-Powered](https://img.shields.io/badge/AI-Powered-brightgreen.svg)](https://ollama.ai)
+[![Production Ready](https://img.shields.io/badge/production-ready-brightgreen.svg)](https://github.com/GravtyWaves/GravityFrameWork)
 
 *Discover. Install. Connect. Orchestrate. Deploy. Monitor. **DEVELOP - With AI Intelligence.***
 

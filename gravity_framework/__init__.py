@@ -19,7 +19,7 @@ REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
 ================================================================================
 """
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 __author__ = "Gravity Framework Team"
 __email__ = "team@gravityframework.dev"
 __license__ = "MIT"

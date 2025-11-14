@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gravity-framework"
-version = "0.1.0"
+version = "1.0.0"
 description = "A Python framework for discovering, installing, connecting, and orchestrating microservices"
 authors = ["Gravity Framework Team <team@gravityframework.dev>"]
 license = "MIT"
@@ -9,7 +9,7 @@ homepage = "https://github.com/GravtyWaves/GravityFrameWork"
 repository = "https://github.com/GravtyWaves/GravityFrameWork"
 keywords = ["microservices", "orchestration", "framework", "service-discovery", "deployment"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.11",
