@@ -1,17 +1,22 @@
-"""Dependency resolution using PubGrub algorithm."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/resolver/dependency.py
+PURPOSE: Dependency resolution with PubGrub algorithm
+DESCRIPTION: Resolves service dependencies and version conflicts using the PubGrub
+             algorithm, ensuring compatible service versions.
 
-import logging
-from typing import Dict, List, Set, Optional, Tuple
-from collections import defaultdict, deque
-import re
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from gravity_framework.models.service import Service, ServiceDependency
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-logger = logging.getLogger(__name__)
-
-
-class VersionConstraint:
-    """Version constraint parser and evaluator."""
     
     def __init__(self, constraint: str):
         """Initialize version constraint.

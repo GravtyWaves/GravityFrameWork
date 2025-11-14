@@ -1,16 +1,21 @@
-"""Test cases for authentication endpoints."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: examples/sample-auth-service/tests/test_auth.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-import pytest
-from httpx import AsyncClient
-from sqlalchemy.ext.asyncio import AsyncSession
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from app.main import app
-from app.database import get_db
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-
-@pytest.fixture
-async def client():
-    """Create test client."""
     async with AsyncClient(app=app, base_url="http://test") as ac:
         yield ac
 

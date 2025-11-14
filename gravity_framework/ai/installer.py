@@ -1,9 +1,21 @@
 """
-Automatic Ollama installation and setup.
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/ai/installer.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-This module handles automatic installation of Ollama and AI models
-so users don't need to manually install anything.
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
 """
+
 
 import logging
 import subprocess

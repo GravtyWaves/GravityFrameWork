@@ -131,5 +131,12 @@ Thumbs.db
 
 # Gravity Framework specific
 .gravity/
-services/
 *.log
+
+# Test and example directories (should not be in repository root)
+/existing-project/
+/test-project/
+/htmlcov/
+
+# Keep services empty directory for structure
+# /services/

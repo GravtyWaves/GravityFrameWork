@@ -1,24 +1,21 @@
-"""Authentication API endpoints."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: examples/sample-auth-service/app/api/v1/auth.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy.ext.asyncio import AsyncSession
-from pydantic import BaseModel, EmailStr
-from typing import Optional
-import logging
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from app.database import get_db
-from app.config import settings
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-router = APIRouter()
-security = HTTPBearer()
-logger = logging.getLogger(__name__)
-
-
-# === SCHEMAS ===
-
-class UserRegister(BaseModel):
-    """User registration schema."""
     email: EmailStr
     username: str
     password: str

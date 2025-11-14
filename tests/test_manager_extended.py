@@ -1,22 +1,36 @@
-"""Extended tests for ServiceManager to increase coverage."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_manager_extended.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
+
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
 import pytest
-from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from pathlib import Path
-
+from unittest.mock import Mock, patch, AsyncMock
 from gravity_framework.core.manager import ServiceManager
 from gravity_framework.models.service import (
     Service,
     ServiceManifest,
     ServicePort,
-    HealthCheck,
-    DatabaseRequirement
+    HealthCheck
 )
 
 
 @pytest.fixture
 def manager():
-    """Create ServiceManager with mocked Docker client."""
+    """Create a ServiceManager with mocked Docker client."""
     mock_client = Mock()
     mock_client.containers = Mock()
     mock_client.images = Mock()

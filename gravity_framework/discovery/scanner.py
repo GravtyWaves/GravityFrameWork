@@ -1,112 +1,95 @@
-"""Service discovery scanner for Git repositories."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/discovery/scanner.py
+PURPOSE: Service discovery from Git repositories and local paths
+DESCRIPTION: Scans Git repositories and local directories to discover microservices
+             and parse their manifests. Supports PRIVATE repositories with
+             authentication (SSH keys, Personal Access Tokens, OAuth).
 
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
+
+import os
 import logging
 from pathlib import Path
-from typing import List, Optional, Dict, Any
-import yaml
+from typing import Optional, List, Dict
 import git
+import yaml
 from jsonschema import validate, ValidationError
 
-from gravity_framework.models.service import ServiceManifest, Service, ServiceStatus
+from gravity_framework.models.service import Service, ServiceManifest, ServiceStatus
 
 logger = logging.getLogger(__name__)
 
-
+# Manifest schema for validation
 MANIFEST_SCHEMA = {
     "type": "object",
-    "required": ["name", "version", "repository"],
+    "required": ["name", "version"],
     "properties": {
-        "name": {"type": "string", "pattern": "^[a-z0-9_-]+$"},
+        "name": {"type": "string"},
         "version": {"type": "string"},
         "description": {"type": "string"},
-        "type": {"type": "string", "enum": ["api", "web", "worker", "cron", "database", "cache"]},
         "repository": {"type": "string"},
-        "branch": {"type": "string"},
-        "dependencies": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "required": ["name"],
-                "properties": {
-                    "name": {"type": "string"},
-                    "version": {"type": "string"},
-                    "optional": {"type": "boolean"}
-                }
-            }
-        },
-        "databases": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "required": ["name", "type"],
-                "properties": {
-                    "name": {"type": "string"},
-                    "type": {"type": "string", "enum": ["postgresql", "mysql", "mongodb", "redis"]},
-                    "version": {"type": "string"},
-                    "charset": {"type": "string"},
-                    "collation": {"type": "string"},
-                    "extensions": {"type": "array", "items": {"type": "string"}}
-                }
-            }
-        },
-        "runtime": {"type": "string"},
-        "command": {"type": "string"},
-        "working_dir": {"type": "string"},
-        "ports": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "required": ["container"],
-                "properties": {
-                    "container": {"type": "integer"},
-                    "host": {"type": "integer"},
-                    "protocol": {"type": "string"}
-                }
-            }
-        },
-        "health_check": {
-            "type": "object",
-            "properties": {
-                "endpoint": {"type": "string"},
-                "interval": {"type": "integer"},
-                "timeout": {"type": "integer"},
-                "retries": {"type": "integer"}
-            }
-        },
-        "environment": {
-            "type": "object",
-            "properties": {
-                "variables": {"type": "object"},
-                "secrets": {"type": "array", "items": {"type": "string"}}
-            }
-        },
-        "api_prefix": {"type": "string"},
-        "public": {"type": "boolean"},
-        "cpu_limit": {"type": "string"},
-        "memory_limit": {"type": "string"},
-        "install_script": {"type": "string"},
-        "build_args": {"type": "object"}
+        "branch": {"type": "string"}
     }
 }
 
 
 class ServiceScanner:
-    """Service discovery scanner."""
+    """
+    Service scanner with private repository support.
     
-    def __init__(self, services_dir: Path):
-        """Initialize scanner.
+    Supports authentication for private GitHub/GitLab/Bitbucket repositories using:
+    - Personal Access Tokens (HTTPS)
+    - SSH Keys
+    - OAuth (future support)
+    """
+    
+    def __init__(
+        self, 
+        services_dir: Path,
+        auth_token: Optional[str] = None,
+        ssh_key_path: Optional[Path] = None
+    ):
+        """Initialize scanner with authentication support.
         
         Args:
             services_dir: Directory where services are cloned
+            auth_token: Personal Access Token for HTTPS authentication (GitHub/GitLab/Bitbucket)
+            ssh_key_path: Path to SSH private key for SSH authentication
         """
         self.services_dir = services_dir
         self.services_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Authentication credentials
+        self.auth_token = auth_token or os.getenv('GIT_AUTH_TOKEN')
+        self.ssh_key_path = ssh_key_path or os.getenv('GIT_SSH_KEY_PATH')
+        
+        logger.info("Scanner initialized with authentication support")
     
     def discover_from_git(self, repo_url: str, branch: str = "main") -> Optional[Service]:
-        """Discover service from Git repository.
+        """Discover service from Git repository (supports private repos).
+        
+        Authentication methods:
+        1. SSH: Uses SSH key from ssh_key_path or ~/.ssh/id_rsa
+        2. HTTPS + Token: Uses Personal Access Token (GitHub/GitLab/Bitbucket)
+        3. OAuth: Future support for OAuth flow
         
         Args:
-            repo_url: Git repository URL
+            repo_url: Git repository URL (HTTPS or SSH format)
+                     Examples:
+                     - https://github.com/user/repo.git
+                     - git@github.com:user/repo.git
+                     - https://gitlab.com/user/repo.git
             branch: Git branch name
             
         Returns:
@@ -119,14 +102,42 @@ class ServiceScanner:
             repo_name = repo_url.rstrip("/").split("/")[-1].replace(".git", "")
             service_path = self.services_dir / repo_name
             
+            # Prepare authentication
+            clone_url = self._prepare_authenticated_url(repo_url)
+            git_env = self._prepare_git_environment()
+            
             # Clone or update repository
             if service_path.exists():
                 logger.info(f"Updating existing repository: {repo_name}")
                 repo = git.Repo(service_path)
-                repo.remotes.origin.pull(branch)
+                
+                # Set authentication for private repos
+                if self.auth_token and repo_url.startswith("https://"):
+                    # Update remote URL with token
+                    repo.remotes.origin.set_url(clone_url)
+                
+                # Pull latest changes
+                with repo.git.custom_environment(**git_env):
+                    repo.remotes.origin.pull(branch)
             else:
                 logger.info(f"Cloning repository: {repo_name}")
-                repo = git.Repo.clone_from(repo_url, service_path, branch=branch)
+                
+                # Clone with authentication
+                if git_env:
+                    # SSH authentication
+                    repo = git.Repo.clone_from(
+                        repo_url, 
+                        service_path, 
+                        branch=branch,
+                        env=git_env
+                    )
+                else:
+                    # HTTPS with token
+                    repo = git.Repo.clone_from(
+                        clone_url, 
+                        service_path, 
+                        branch=branch
+                    )
             
             # Look for manifest file
             manifest_path = service_path / "gravity-service.yaml"
@@ -158,10 +169,61 @@ class ServiceScanner:
             
         except git.GitCommandError as e:
             logger.error(f"Git error while discovering service: {e}")
+            logger.error("Possible causes:")
+            logger.error("  - Repository is private and requires authentication")
+            logger.error("  - Invalid credentials (check GIT_AUTH_TOKEN or SSH key)")
+            logger.error("  - Repository does not exist")
+            logger.error("  - Network connection issues")
             return None
         except Exception as e:
             logger.error(f"Error discovering service: {e}")
             return None
+    
+    def _prepare_authenticated_url(self, repo_url: str) -> str:
+        """Prepare repository URL with authentication for HTTPS.
+        
+        Args:
+            repo_url: Original repository URL
+            
+        Returns:
+            URL with authentication token embedded (for HTTPS)
+        """
+        # SSH URLs don't need token authentication
+        if repo_url.startswith("git@"):
+            return repo_url
+        
+        # No token provided, return original URL
+        if not self.auth_token:
+            return repo_url
+        
+        # Inject token into HTTPS URL
+        # From: https://github.com/user/repo.git
+        # To:   https://token@github.com/user/repo.git
+        if repo_url.startswith("https://"):
+            # GitHub/GitLab/Bitbucket support this format
+            return repo_url.replace("https://", f"https://{self.auth_token}@")
+        
+        return repo_url
+    
+    def _prepare_git_environment(self) -> Dict[str, str]:
+        """Prepare Git environment variables for SSH authentication.
+        
+        Returns:
+            Environment variables dictionary
+        """
+        env = {}
+        
+        # SSH key authentication
+        if self.ssh_key_path:
+            ssh_key = Path(self.ssh_key_path).expanduser()
+            if ssh_key.exists():
+                # Set GIT_SSH_COMMAND to use specific SSH key
+                env['GIT_SSH_COMMAND'] = f'ssh -i {ssh_key} -o StrictHostKeyChecking=no'
+                logger.debug(f"Using SSH key: {ssh_key}")
+            else:
+                logger.warning(f"SSH key not found: {ssh_key}")
+        
+        return env
     
     def discover_from_path(self, path: Path) -> Optional[Service]:
         """Discover service from local path.

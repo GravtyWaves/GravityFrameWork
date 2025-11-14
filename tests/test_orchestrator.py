@@ -1,16 +1,21 @@
-"""Test Database Orchestrator."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_orchestrator.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
-import asyncio
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from gravity_framework.database.orchestrator import DatabaseOrchestrator
-from gravity_framework.models.service import Service, ServiceManifest, DatabaseRequirement, DatabaseType
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-
-@pytest.fixture
-def orchestrator():
-    """Create database orchestrator instance."""
     config = {
         "postgres_host": "localhost",
         "postgres_port": 5432,

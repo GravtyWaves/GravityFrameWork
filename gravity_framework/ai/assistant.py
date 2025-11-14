@@ -1,19 +1,22 @@
 """
-AI Assistant for intelligent microservice orchestration.
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/ai/assistant.py
+PURPOSE: AI assistant integration (Ollama only)
+DESCRIPTION: Provides AI assistance for microservice orchestration using various
+             AI providers including Ollama (free local AI).
 
-This module provides 100% FREE AI-powered assistance using Ollama (local AI models)
-to help users connect microservices, analyze database schemas, and make intelligent
-architectural decisions.
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-Ollama is completely free, runs locally, and supports models like:
-- Llama 3.2 (3B) - Fast and lightweight
-- Llama 3.1 (8B) - Balanced performance
-- DeepSeek Coder - Specialized for code
-- Qwen 2.5 Coder - Excellent for technical analysis
-
-No API keys, no subscriptions, no internet required after model download!
-Ollama is automatically installed if not present - no manual setup needed!
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
 """
+
 
 import logging
 import subprocess

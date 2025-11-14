@@ -1,23 +1,21 @@
-"""Simplified test cases for ServiceManager functionality."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_manager.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-import pytest
-from unittest.mock import Mock, AsyncMock, patch
-import docker
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from gravity_framework.core.manager import ServiceManager
-from gravity_framework.models.service import (
-    Service,
-    ServiceManifest,
-    ServiceStatus,
-    ServiceType,
-    ServicePort,
-    HealthCheck
-)
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-
-@pytest.fixture
-def mock_docker_client():
-    """Create mock Docker client."""
     client = Mock()
     client.containers = Mock()
     client.images = Mock()

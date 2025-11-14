@@ -1,22 +1,35 @@
-"""Targeted tests for framework.py uncovered lines to reach 95% coverage."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_framework_coverage.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
+
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
 import pytest
-from pathlib import Path
-from unittest.mock import Mock, AsyncMock, patch, MagicMock
-
+from unittest.mock import Mock, patch, AsyncMock
 from gravity_framework.core.framework import GravityFramework
 from gravity_framework.models.service import (
     Service,
     ServiceManifest,
-    ServiceDependency,
     DatabaseRequirement,
     DatabaseType,
     ServiceStatus
 )
 
 
-class TestFrameworkCoverageMissingLines:
-    """Tests targeting specific uncovered lines in framework.py"""
+class TestFrameworkCoverage:
+    """Tests to improve framework.py coverage."""
     
     def test_discover_services_from_local_path(self, tmp_path):
         """Test discovering services from local path (lines 91, 94-96)."""

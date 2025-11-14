@@ -1,19 +1,21 @@
-"""Integration tests for end-to-end workflows."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_integration.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-import pytest
-from pathlib import Path
-import tempfile
-import shutil
-from unittest.mock import Mock, AsyncMock, patch
-import asyncio
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from gravity_framework.core.framework import GravityFramework
-from gravity_framework.models.service import ServiceStatus, DatabaseType
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-
-@pytest.fixture
-async def temp_workspace():
-    """Create temporary workspace directory."""
     temp_dir = tempfile.mkdtemp()
     yield Path(temp_dir)
     shutil.rmtree(temp_dir)

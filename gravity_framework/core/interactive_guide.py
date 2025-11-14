@@ -1,9 +1,21 @@
 """
-Interactive Guide System - Step-by-step assistance for users.
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/core/interactive_guide.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-This module analyzes microservices and provides interactive,
-step-by-step guidance to users, automating as much as possible.
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
 """
+
 
 import logging
 from typing import List, Dict, Optional, Any, Tuple

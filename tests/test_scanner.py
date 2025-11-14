@@ -1,17 +1,21 @@
-"""Test Service Discovery Scanner."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_scanner.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-import pytest
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
-import yaml
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from gravity_framework.discovery.scanner import ServiceScanner
-from gravity_framework.models.service import Service, ServiceStatus
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-
-@pytest.fixture
-def scanner(tmp_path):
-    """Create a scanner instance with temporary directory."""
     return ServiceScanner(tmp_path / "services")
 
 

@@ -1,12 +1,21 @@
-"""Test configuration and fixtures."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/conftest.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-import pytest
-from pathlib import Path
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-@pytest.fixture
-def tmp_project_path(tmp_path):
-    """Create a temporary project directory."""
     project_dir = tmp_path / "test_project"
     project_dir.mkdir()
     return project_dir

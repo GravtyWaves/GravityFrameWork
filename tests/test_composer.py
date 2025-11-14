@@ -1,17 +1,31 @@
-"""Tests for Docker Compose generator."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_composer.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
+
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
 import pytest
-from pathlib import Path
-
-from gravity_framework.deployment.composer import DockerComposeGenerator
 from gravity_framework.models.service import (
     Service,
     ServiceManifest,
+    ServicePort,
     DatabaseRequirement,
     ServiceDependency,
-    HealthCheck,
-    ServicePort
+    HealthCheck
 )
+from gravity_framework.deployment.composer import DockerComposeGenerator
 
 
 @pytest.fixture

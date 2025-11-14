@@ -1,9 +1,21 @@
 """
-Example: Using AI-Powered Gravity Framework
+================================================================================
+PROJECT: Gravity Framework
+FILE: examples/ai_powered_orchestration.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-This example demonstrates how to use FREE AI assistance (via GitHub Copilot)
-to intelligently orchestrate microservices.
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
 """
+
 
 import asyncio
 from gravity_framework import GravityFramework

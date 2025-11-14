@@ -1,21 +1,34 @@
-"""Extended tests for GravityFramework to increase coverage."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_framework_extended.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
+
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
 import pytest
-from pathlib import Path
-from unittest.mock import Mock, AsyncMock, patch
-
+from unittest.mock import Mock, patch, AsyncMock
 from gravity_framework.core.framework import GravityFramework
 from gravity_framework.models.service import (
     Service,
     ServiceManifest,
-    ServiceDependency,
     DatabaseRequirement,
-    ServicePort
+    ServiceDependency
 )
 
 
-class TestGravityFrameworkExtended:
-    """Extended test cases for GravityFramework coverage."""
+class TestFrameworkExtended:
+    """Extended tests for GravityFramework."""
     
     def test_install_specific_service(self, tmp_path):
         """Test installing a specific service."""

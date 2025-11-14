@@ -1,13 +1,27 @@
-"""Additional tests for ServiceScanner to improve coverage."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_scanner_coverage.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
+
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
 import pytest
 import yaml
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 import git
-
+from pathlib import Path
+from unittest.mock import MagicMock, patch
 from gravity_framework.discovery.scanner import ServiceScanner
-from gravity_framework.models.service import Service, ServiceStatus
 
 
 @pytest.fixture

@@ -1,13 +1,30 @@
-"""Comprehensive tests for DatabaseOrchestrator to improve coverage."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_orchestrator_coverage.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
+
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
 import pytest
-import asyncio
-from unittest.mock import AsyncMock, MagicMock, patch, ANY
-from pathlib import Path
-
+from unittest.mock import Mock, MagicMock, patch, AsyncMock
 from gravity_framework.database.orchestrator import DatabaseOrchestrator
 from gravity_framework.models.service import (
-    Service, ServiceManifest, ServiceType, DatabaseType, DatabaseRequirement
+    ServiceManifest,
+    Service,
+    DatabaseRequirement,
+    ServiceType,
+    DatabaseType
 )
 
 

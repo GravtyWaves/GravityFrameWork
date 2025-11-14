@@ -1,12 +1,22 @@
-"""Service models for Gravity Framework."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/models/service.py
+PURPOSE: Data models for services and service registry
+DESCRIPTION: Defines Service, ServiceManifest, ServiceRegistry and related models
+             for representing and managing microservices.
 
-from typing import Dict, List, Optional, Any
-from pydantic import BaseModel, Field, field_validator, ConfigDict
-from enum import Enum
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-class ServiceType(str, Enum):
-    """Service types."""
     API = "api"
     WEB = "web"
     WORKER = "worker"

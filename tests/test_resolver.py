@@ -1,13 +1,21 @@
-"""Test Dependency Resolver."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_resolver.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-import pytest
-from gravity_framework.resolver.dependency import DependencyResolver, VersionConstraint
-from gravity_framework.models.service import Service, ServiceManifest, ServiceDependency
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-@pytest.fixture
-def service_a():
-    """Create service A."""
     manifest = ServiceManifest(
         name="service-a",
         version="1.0.0",

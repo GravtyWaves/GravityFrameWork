@@ -1,5 +1,18 @@
-"""Database package."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/database/__init__.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-from gravity_framework.database.orchestrator import DatabaseOrchestrator
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-__all__ = ["DatabaseOrchestrator"]
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
+

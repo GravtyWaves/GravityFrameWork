@@ -1,9 +1,21 @@
 """
-Docker Compose configuration generator.
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/deployment/composer.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-This module automatically generates docker-compose.yml files from service manifests,
-including all services, databases, networks, and dependencies.
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
 """
+
 
 from pathlib import Path
 from typing import Dict, List, Optional, Any

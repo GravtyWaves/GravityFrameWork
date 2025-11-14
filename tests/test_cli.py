@@ -1,21 +1,21 @@
-"""Test cases for CLI commands."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_cli.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-import pytest
-from typer.testing import CliRunner
-from unittest.mock import Mock, AsyncMock, patch, MagicMock
-from pathlib import Path
-import asyncio
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from gravity_framework.cli.main import app
-from gravity_framework.models.service import Service, ServiceStatus
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-
-runner = CliRunner()
-
-
-@pytest.fixture
-def mock_framework():
-    """Create mock GravityFramework instance."""
     framework = Mock()
     framework.discover_services = AsyncMock(return_value=[])
     framework.install = AsyncMock(return_value=True)

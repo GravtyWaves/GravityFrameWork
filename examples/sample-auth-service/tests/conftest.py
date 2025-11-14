@@ -1,15 +1,21 @@
-"""Test configuration."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: examples/sample-auth-service/tests/conftest.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-import pytest
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.ext.asyncio import async_sessionmaker
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from app.models import Base
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-
-@pytest.fixture
-async def db_engine():
-    """Create test database engine."""
     engine = create_async_engine(
         "sqlite+aiosqlite:///:memory:",
         echo=False

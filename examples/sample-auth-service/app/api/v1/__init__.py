@@ -1,5 +1,18 @@
-"""API v1 router initialization."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: examples/sample-auth-service/app/api/v1/__init__.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-from fastapi import APIRouter
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-router = APIRouter()
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
+

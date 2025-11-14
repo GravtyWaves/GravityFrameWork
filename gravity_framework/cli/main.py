@@ -1,6 +1,22 @@
 """
-Gravity Framework CLI - Main entry point for command-line interface.
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/cli/main.py
+PURPOSE: Command-line interface
+DESCRIPTION: Provides CLI commands for interacting with the Gravity Framework
+             using Typer and Rich for beautiful terminal output.
+
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
 """
+
 
 import typer
 import asyncio

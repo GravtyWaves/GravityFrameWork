@@ -1,22 +1,36 @@
-"""Tests for AI Assistant functionality."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_ai_assistant.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
+
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
 import pytest
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
-
+from unittest.mock import Mock, patch
 from gravity_framework.ai.assistant import AIAssistant
 from gravity_framework.models.service import (
     Service,
     ServiceManifest,
-    ServiceType,
+    ServiceDependency,
     DatabaseRequirement,
     DatabaseType,
-    ServiceDependency
+    ServiceType
 )
 
 
 class TestAIAssistant:
-    """Test suite for AI Assistant."""
+    """Tests for AI Assistant functionality."""
     
     def test_ai_assistant_init_enabled(self):
         """Test AI assistant initialization when enabled."""

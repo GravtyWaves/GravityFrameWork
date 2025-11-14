@@ -1,21 +1,22 @@
-"""Service lifecycle manager."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/core/manager.py
+PURPOSE: Service lifecycle management
+DESCRIPTION: Manages service lifecycle including starting, stopping, monitoring,
+             and health checking of microservices.
 
-import logging
-import asyncio
-import subprocess
-from pathlib import Path
-from typing import Dict, List, Optional
-import httpx
-import docker
-from docker.models.containers import Container
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-from gravity_framework.models.service import Service, ServiceStatus
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
-logger = logging.getLogger(__name__)
-
-
-class ServiceManager:
-    """Service lifecycle manager."""
     
     def __init__(self, docker_client=None):
         """Initialize service manager.

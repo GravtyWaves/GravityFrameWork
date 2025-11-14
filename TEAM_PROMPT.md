@@ -1341,6 +1341,17 @@ git commit -m "perf(database): optimize query performance"
 
 ## 🏗️ TECHNOLOGY STACK
 
+### 🔐 Private Repository Support:
+- **Authentication Methods:**
+  - Personal Access Tokens (GitHub, GitLab, Bitbucket)
+  - SSH Keys (ed25519, RSA)
+  - OAuth Tokens (future support)
+- **Security:**
+  - Environment-based credential storage
+  - Secret management integration (Vault)
+  - Automatic token rotation (future)
+- **Documentation:** See [PRIVATE_REPOS.md](./PRIVATE_REPOS.md) for complete guide
+
 ### Core Framework Technologies:
 - **Python 3.11+** (Type hints, async/await, performance improvements)
 - **FastAPI** (Web dashboard, REST API for framework management)

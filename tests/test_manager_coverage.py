@@ -1,15 +1,35 @@
-"""Targeted tests for manager.py to improve coverage to 95%."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: tests/test_manager_coverage.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
+
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch, Mock
 from pathlib import Path
-
+from unittest.mock import Mock, MagicMock, patch, AsyncMock
 from gravity_framework.core.manager import ServiceManager
-from gravity_framework.models.service import Service, ServiceManifest, ServiceStatus, ServicePort
+from gravity_framework.models.service import (
+    Service,
+    ServiceManifest,
+    ServicePort,
+    ServiceStatus
+)
 
 
 class TestManagerCoverage:
-    """Tests targeting uncovered lines in manager.py"""
+    """Tests to improve manager.py coverage."""
     
     @pytest.mark.asyncio
     async def test_install_service_no_path(self):

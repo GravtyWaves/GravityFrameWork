@@ -1,9 +1,21 @@
 """
-Simple example showing auto-installation of AI.
+================================================================================
+PROJECT: Gravity Framework
+FILE: examples/auto_ai_install_demo.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-This demonstrates how Gravity Framework automatically installs
-Ollama and AI models without any manual setup.
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
+
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
 """
+
 
 from gravity_framework import GravityFramework
 

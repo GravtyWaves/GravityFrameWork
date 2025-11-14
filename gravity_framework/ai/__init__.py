@@ -1,6 +1,18 @@
-"""AI-powered assistance for Gravity Framework."""
+"""
+================================================================================
+PROJECT: Gravity Framework
+FILE: gravity_framework/ai/__init__.py
+PURPOSE: Framework component
+DESCRIPTION: Component of the Gravity Framework for microservices orchestration
 
-from gravity_framework.ai.assistant import AIAssistant
-from gravity_framework.ai.installer import OllamaInstaller, ensure_ollama
+AUTHOR: Gravity Framework Team
+EMAIL: team@gravityframework.dev
+LICENSE: MIT
+CREATED: 2025-11-13
+MODIFIED: 2025-11-14
 
-__all__ = ["AIAssistant", "OllamaInstaller", "ensure_ollama"]
+COPYRIGHT: (c) 2025 Gravity Framework Team
+REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
+================================================================================
+"""
+
