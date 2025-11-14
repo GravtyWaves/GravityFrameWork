@@ -486,5 +486,72 @@ class GravityFramework:
         """
         services = self.registry.get_all()
         return self.ai.optimize_deployment(services)
+    
+    def interactive_setup(self) -> Dict[str, Any]:
+        """
+        Interactive step-by-step setup guide.
+        
+        Analyzes all discovered services and provides interactive guidance:
+        - Shows what will be installed
+        - Creates databases automatically
+        - Installs dependencies
+        - Configures environment variables
+        - Starts services
+        
+        Most steps are automated - minimal user interaction needed!
+        
+        Returns:
+            Setup summary with statistics
+            
+        Example:
+            >>> framework = GravityFramework()
+            >>> framework.discover_services()
+            >>> summary = framework.interactive_setup()
+            
+            🤖 Gravity Framework - Interactive Guide
+            I'll analyze your microservices and guide you step-by-step
+            
+            ⏳ Analyzing your microservices...
+            ✅ Analysis Complete!
+            
+            📋 Setup Plan (4 steps):
+              1. 🤖 Auto - Create Databases
+              2. 🤖 Auto - Install auth-service Dependencies
+              3. 🤖 Auto - Configure Environment Variables  
+              4. 🤖 Auto - Start All Services
+            
+            Ready to set up your microservices? [Y/n]: y
+            
+            🚀 Starting Setup Process
+            ============================
+            
+            Step 1/4: Create Databases
+            🗄️  Creating databases...
+              ✓ postgresql database: auth_db (for auth-service)
+            ✅ Create Databases completed!
+            
+            Step 2/4: Install auth-service Dependencies
+            📦 Installing dependencies for auth-service...
+            Running: pip install -r requirements.txt
+            ✓ Dependencies installed
+            ✅ Install auth-service Dependencies completed!
+            
+            ...
+            
+            📊 Setup Summary
+            ✅ Completed: 4
+            ❌ Failed: 0
+            📈 Success Rate: 100.0%
+        """
+        from gravity_framework.core.interactive_guide import InteractiveGuide
+        
+        services = self.registry.get_all()
+        
+        if not services:
+            logger.warning("No services discovered yet. Run discover_services() first.")
+            return {'error': 'No services found'}
+        
+        guide = InteractiveGuide(services)
+        return guide.analyze_and_guide()
         
         return self.registry.get_all()
