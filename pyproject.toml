@@ -1,0 +1,156 @@
+[tool.poetry]
+name = "gravity-framework"
+version = "0.1.0"
+description = "A Python framework for discovering, installing, connecting, and orchestrating microservices"
+authors = ["Gravity Framework Team <team@gravityframework.dev>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/GravtyWaves/GravityFrameWork"
+repository = "https://github.com/GravtyWaves/GravityFrameWork"
+keywords = ["microservices", "orchestration", "framework", "service-discovery", "deployment"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+packages = [{include = "gravity_framework"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# CLI Framework
+typer = {extras = ["all"], version = "^0.12.0"}
+rich = "^13.7.0"
+click = "^8.1.7"
+
+# Plugin System
+pluggy = "^1.4.0"
+stevedore = "^5.2.0"
+
+# Configuration Management
+pydantic = "^2.5.0"
+pydantic-settings = "^2.1.0"
+dynaconf = "^3.2.4"
+python-dotenv = "^1.0.0"
+
+# Database
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.23"}
+alembic = "^1.13.0"
+psycopg = {extras = ["binary"], version = "^3.1.16"}
+aiomysql = "^0.2.0"
+motor = "^3.3.2"
+redis = {extras = ["hiredis"], version = "^5.0.1"}
+
+# HTTP Client
+httpx = "^0.26.0"
+aiohttp = "^3.9.1"
+
+# Service Discovery
+python-consul = "^1.1.0"
+
+# Web Framework (Dashboard)
+fastapi = "^0.109.0"
+uvicorn = {extras = ["standard"], version = "^0.27.0"}
+
+# Template Engine
+jinja2 = "^3.1.2"
+
+# YAML/JSON Processing
+pyyaml = "^6.0.1"
+jsonschema = "^4.20.0"
+
+# Dependency Resolution
+poetry-core = "^1.9.0"
+packaging = "^23.2"
+
+# Git Operations
+gitpython = "^3.1.40"
+
+# Docker
+docker = "^7.0.0"
+
+# Logging
+structlog = "^24.1.0"
+
+# Monitoring
+prometheus-client = "^0.19.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.23.2"
+pytest-cov = "^4.1.0"
+pytest-mock = "^3.12.0"
+black = "^23.12.1"
+isort = "^5.13.2"
+mypy = "^1.8.0"
+ruff = "^0.1.9"
+pre-commit = "^3.6.0"
+bandit = "^1.7.6"
+safety = "^3.0.1"
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.5.3"
+mkdocs-material = "^9.5.3"
+mkdocstrings = {extras = ["python"], version = "^0.24.0"}
+
+[tool.poetry.scripts]
+gravity = "gravity_framework.cli.main:app"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=gravity_framework --cov-report=html --cov-report=term --cov-fail-under=95"
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["gravity_framework"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
