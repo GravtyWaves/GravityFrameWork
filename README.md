@@ -17,11 +17,14 @@
 
 Gravity Framework is a **complete microservices orchestration platform** that transforms independent services from separate repositories into a unified, production-ready application — automatically.
 
+Simply provide **GitHub repository URLs** of your microservices, and Gravity handles everything: discovery, dependency resolution, database setup, containerization, and deployment.
+
 ### ✨ Core Capabilities
 
-- 🔍 **Smart Discovery** - Automatically detect services from Git repositories
+- 🔍 **Smart Discovery** - Automatically detect services from **GitHub URLs**
 - 📦 **Auto Installation** - Resolve dependencies and install in correct order
-- 🗄️ **Database Magic** - Create PostgreSQL/MySQL/MongoDB databases automatically
+- 🗄️ **Multi-Database Support** - **PostgreSQL, SQLite, MySQL, MongoDB, Redis** - all created automatically
+- 🎨 **Frontend Integration** - Support for React, Vue, Angular, and static frontends
 - 🔗 **Service Wiring** - Connect services with zero manual configuration
 - 🐳 **Container Management** - Run each service in isolated Docker containers
 - ⚡ **Dependency Resolution** - Handle version conflicts with PubGrub algorithm
@@ -41,9 +44,10 @@ pip install gravity-framework
 gravity init my-app
 cd my-app
 
-# Add services
-gravity add https://github.com/org/auth-service
-gravity add https://github.com/org/user-service
+# Add services from GitHub URLs
+gravity add https://github.com/your-org/auth-service
+gravity add https://github.com/your-org/user-service
+gravity add https://github.com/your-org/frontend-app
 
 # Install & start
 gravity install
@@ -53,23 +57,39 @@ gravity start
 gravity status
 ```
 
-## 🗄️ Automatic Database Creation
+## 🗄️ Multi-Database Support
 
-Services declare database needs:
+Gravity Framework supports **SQLite, PostgreSQL, MySQL, MongoDB, and Redis**. Services declare database needs in their manifest:
+
 ```yaml
 databases:
   - name: auth_db
     type: postgresql
     extensions: [uuid-ossp]
+  - name: cache_db
+    type: sqlite
   - name: sessions
     type: redis
 ```
 
-Gravity **automatically creates**:
-- ✅ PostgreSQL with extensions
-- ✅ MySQL with charset/collation
-- ✅ MongoDB databases
-- ✅ Redis connections
+Gravity **automatically creates and configures**:
+- ✅ **SQLite** - Lightweight file-based database
+- ✅ **PostgreSQL** - With extensions and proper charset
+- ✅ **MySQL** - With charset/collation configuration
+- ✅ **MongoDB** - NoSQL document database
+- ✅ **Redis** - In-memory cache and sessions
+
+## 🎨 Frontend Support
+
+Gravity seamlessly integrates frontend applications:
+
+- **React/Next.js** - Modern React applications
+- **Vue/Nuxt** - Vue.js frameworks
+- **Angular** - Angular applications
+- **Static Sites** - HTML/CSS/JS served via nginx
+- **API-First** - Any frontend consuming your microservices
+
+Simply specify `type: frontend` in your service manifest.
 
 ## 📊 CLI Commands
 
