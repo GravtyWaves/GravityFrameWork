@@ -1,6 +1,6 @@
 # 🤖 AI-Powered Features Guide
 
-Gravity Framework integrates **FREE AI assistance** using GitHub Copilot and VS Code AI to provide intelligent microservice orchestration.
+Gravity Framework integrates **100% FREE AI assistance** using Ollama (local AI models) to provide intelligent microservice orchestration.
 
 ## 🎯 Overview
 
@@ -11,17 +11,61 @@ The AI assistant helps you:
 - **Diagnose errors** with intelligent solutions
 - **Optimize deployment** for performance and scalability
 
-**Best part? It's completely FREE!** Uses GitHub Copilot (free for students and open-source projects) or VS Code's built-in AI.
+**Best part? It's 100% FREE for EVERYONE!** 
+- Uses Ollama (completely free, runs locally)
+- No API keys, no subscriptions, no internet after setup
+- Works for students, professionals, companies - anyone!
 
 ## 🚀 Quick Start
 
-### Enable AI Assistance
+### Step 1: Install Ollama (2 minutes)
+
+```bash
+# Download from: https://ollama.com/download
+
+# Or use package manager:
+# Mac
+brew install ollama
+
+# Linux
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Windows: Download installer from ollama.com
+```
+
+### Step 2: Get a Free AI Model
+
+```bash
+# Recommended: Fast & lightweight (2GB)
+ollama pull llama3.2:3b
+
+# Alternative: Better quality (7GB)
+ollama pull llama3.1:8b
+
+# For code-heavy tasks (5GB)
+ollama pull deepseek-coder:6.7b
+```
+
+### Step 3: Start Ollama
+
+```bash
+ollama serve
+# Ollama runs at http://localhost:11434
+```
+
+### Step 4: Use Gravity with AI
 
 ```python
 from gravity_framework import GravityFramework
 
-# AI assistance enabled by default (auto-detects Copilot)
+# AI assistance enabled by default (auto-detects Ollama)
 framework = GravityFramework(ai_assist=True)
+
+# Or specify a model
+framework = GravityFramework(
+    ai_assist=True,
+    ollama_model="llama3.2:3b"  # Use your preferred model
+)
 
 # Discover services
 framework.discover_services("https://github.com/org/auth-service")
@@ -36,9 +80,9 @@ print(analysis)
 
 ```python
 if framework.ai.enabled:
-    print("🤖 AI Assistant active - powered by GitHub Copilot")
+    print(f"🤖 AI Assistant active - powered by Ollama ({framework.ai.ollama_model})")
 else:
-    print("ℹ️ Install GitHub Copilot for free AI assistance")
+    print("⚠️ Install Ollama for FREE AI: https://ollama.com/download")
 ```
 
 ## 🧩 Intelligent Service Connection (Puzzle-Solving)

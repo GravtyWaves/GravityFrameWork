@@ -31,13 +31,13 @@ class TestAIAssistant:
         
         assert assistant.enabled is False
     
-    def test_detect_copilot_not_found(self):
-        """Test Copilot detection when not installed."""
+    def test_detect_ollama_not_found(self):
+        """Test Ollama detection when not installed."""
         assistant = AIAssistant(enabled=False)
         
-        # Should return False when Copilot is not detected
-        with patch('pathlib.Path.exists', return_value=False):
-            result = assistant._detect_copilot()
+        # Should return False when Ollama is not detected
+        with patch('requests.get', side_effect=Exception("Connection refused")):
+            result = assistant._detect_ollama()
             assert result is False
     
     def test_analyze_services_disabled(self):

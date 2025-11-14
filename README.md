@@ -22,7 +22,7 @@ Simply provide **GitHub repository URLs** of your microservices, and Gravity han
 
 ### ✨ Core Capabilities
 
-- 🤖 **AI-Powered Orchestration** - **FREE** GitHub Copilot integration for intelligent service connection
+- 🤖 **AI-Powered Orchestration** - **100% FREE** Ollama integration for intelligent service connection (no API keys!)
 - 🔍 **Smart Discovery** - Automatically detect services from **GitHub URLs**
 - 📦 **Auto Installation** - Resolve dependencies and install in correct order
 - 🗄️ **Intelligent Database Management** - Auto-create databases for microservices that don't have them
@@ -104,9 +104,9 @@ When you have multiple microservices, Gravity's AI assistant:
 - ✅ **MongoDB** - NoSQL document database
 - ✅ **Redis** - In-memory cache and sessions
 
-## 🤖 AI-Powered Intelligence (FREE!)
+## 🤖 AI-Powered Intelligence (100% FREE - No API Keys!)
 
-Gravity Framework integrates **FREE GitHub Copilot** and **VS Code AI** to provide intelligent assistance:
+Gravity Framework integrates **Ollama** (completely free local AI) to provide intelligent assistance:
 
 ### 🧩 Intelligent Service Connection
 
@@ -144,10 +144,11 @@ gravity connect --ai-assist
    - Best practices recommendations
    - Performance optimization tips
 
-4. **Zero Cost**
-   - Uses **GitHub Copilot** (free for students, open source)
-   - Leverages **VS Code built-in AI** features
-   - No additional API costs or subscriptions
+4. **Zero Cost - Truly Free for Everyone**
+   - Uses **Ollama** (100% free, no API keys needed)
+   - Runs **locally** on your machine (no internet after download)
+   - No subscriptions, no credits, no limits
+   - Works for students, professionals, everyone!
 
 ### 🎯 How It Works
 
@@ -171,12 +172,39 @@ recommendations = framework.ai_analyze()
 # → "Recommended: Add API gateway between frontend and backend services"
 ```
 
-### 🔧 Enable AI Features
+### 🔧 Enable AI Features (Easy Setup!)
 
-**In VS Code:**
-1. Install [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) (free for students/OSS)
-2. Gravity automatically detects and uses Copilot
-3. Get intelligent suggestions in real-time
+**Step 1: Install Ollama** (2 minutes)
+```bash
+# Windows/Mac/Linux - Download from:
+https://ollama.com/download
+
+# Or use package manager:
+# Mac
+brew install ollama
+
+# Linux
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+**Step 2: Download a Free Model**
+```bash
+# Fast & Lightweight (recommended - 2GB)
+ollama pull llama3.2:3b
+
+# Better quality (7GB)
+ollama pull llama3.1:8b
+
+# Best for code (5GB)
+ollama pull deepseek-coder:6.7b
+```
+
+**Step 3: Start Ollama**
+```bash
+ollama serve
+```
+
+**That's it!** Gravity automatically detects and uses Ollama. No API keys, no configuration!
 
 **CLI:**
 ```bash

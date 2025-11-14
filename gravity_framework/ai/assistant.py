@@ -1,16 +1,25 @@
 """
-AI Copilot integration for intelligent microservice orchestration.
+AI Assistant for intelligent microservice orchestration.
 
-This module provides FREE AI-powered assistance using GitHub Copilot and VS Code AI
+This module provides 100% FREE AI-powered assistance using Ollama (local AI models)
 to help users connect microservices, analyze database schemas, and make intelligent
 architectural decisions.
+
+Ollama is completely free, runs locally, and supports models like:
+- Llama 3.2 (3B) - Fast and lightweight
+- Llama 3.1 (8B) - Balanced performance
+- DeepSeek Coder - Specialized for code
+- Qwen 2.5 Coder - Excellent for technical analysis
+
+No API keys, no subscriptions, no internet required after model download!
 """
 
 import logging
 import subprocess
+import json
+import requests
 from typing import List, Dict, Optional, Any
 from pathlib import Path
-import json
 
 from gravity_framework.models.service import Service
 
@@ -21,59 +30,99 @@ class AIAssistant:
     """
     AI-powered assistant for intelligent microservice orchestration.
     
-    Uses GitHub Copilot and VS Code AI (when available) to provide:
-    - Service connection recommendations
-    - Database schema analysis
+    Uses Ollama (100% FREE local AI) to provide:
+    - Service connection recommendations (puzzle-solving)
+    - Database schema analysis across all microservices
     - Architecture optimization suggestions
-    - Troubleshooting assistance
+    - Intelligent error diagnosis
     
-    This is completely FREE - leverages existing Copilot installation.
+    Completely FREE - no API keys, no subscriptions, runs locally!
+    Install: https://ollama.com/download
     """
     
-    def __init__(self, enabled: bool = True):
+    def __init__(self, enabled: bool = True, ollama_model: str = "llama3.2:3b"):
         """Initialize AI assistant.
         
         Args:
-            enabled: Whether AI assistance is enabled (auto-detects if Copilot is available)
+            enabled: Whether AI assistance is enabled (auto-detects Ollama)
+            ollama_model: Ollama model to use (default: llama3.2:3b - fast and free)
         """
-        self.enabled = enabled and self._detect_copilot()
+        self.ollama_model = ollama_model
+        self.ollama_url = "http://localhost:11434"
+        self.enabled = enabled and self._detect_ollama()
         self._analysis_cache: Dict[str, Any] = {}
         
         if self.enabled:
-            logger.info("🤖 AI Assistant enabled - GitHub Copilot detected")
+            logger.info(f"🤖 AI Assistant enabled - Ollama ({self.ollama_model}) detected")
         else:
-            logger.info("ℹ️ AI Assistant disabled - install GitHub Copilot for free intelligent assistance")
+            logger.warning("⚠️ AI Assistant disabled - install Ollama for FREE: https://ollama.com/download")
     
-    def _detect_copilot(self) -> bool:
-        """Detect if GitHub Copilot or VS Code AI is available.
+    def _detect_ollama(self) -> bool:
+        """Detect if Ollama is running locally.
         
         Returns:
-            True if AI assistance is available
+            True if Ollama is available
         """
         try:
-            # Check if running in VS Code with Copilot
-            if Path.home().joinpath('.vscode', 'extensions').exists():
-                extensions_dir = Path.home().joinpath('.vscode', 'extensions')
-                
-                # Look for Copilot extension
-                copilot_extensions = list(extensions_dir.glob('github.copilot-*'))
-                if copilot_extensions:
+            # Check if Ollama is running
+            response = requests.get(f"{self.ollama_url}/api/tags", timeout=2)
+            if response.status_code == 200:
+                models = response.json().get('models', [])
+                # Check if our preferred model is available
+                model_names = [m.get('name', '') for m in models]
+                if any(self.ollama_model in name for name in model_names):
+                    logger.debug(f"✓ Ollama model {self.ollama_model} found")
                     return True
-            
-            # Check for GitHub CLI with Copilot
-            result = subprocess.run(
-                ['gh', 'copilot', '--version'],
-                capture_output=True,
-                text=True,
-                timeout=5
-            )
-            if result.returncode == 0:
-                return True
-                
+                elif model_names:
+                    # Use first available model
+                    self.ollama_model = model_names[0].split(':')[0] + ':latest'
+                    logger.info(f"Using available Ollama model: {self.ollama_model}")
+                    return True
+                else:
+                    logger.warning(f"Ollama running but no models installed. Run: ollama pull {self.ollama_model}")
+                    return False
+                    
+        except requests.exceptions.RequestException:
+            logger.debug("Ollama not detected. Install from: https://ollama.com/download")
         except Exception as e:
-            logger.debug(f"Copilot detection failed: {e}")
+            logger.debug(f"Ollama detection failed: {e}")
         
         return False
+    
+    def _ask_ollama(self, prompt: str, system_prompt: str = "") -> str:
+        """Ask Ollama AI a question.
+        
+        Args:
+            prompt: The question/prompt to send
+            system_prompt: System context for the AI
+            
+        Returns:
+            AI response text
+        """
+        try:
+            payload = {
+                "model": self.ollama_model,
+                "prompt": prompt,
+                "system": system_prompt or "You are an expert in microservices architecture, databases, and DevOps.",
+                "stream": False
+            }
+            
+            response = requests.post(
+                f"{self.ollama_url}/api/generate",
+                json=payload,
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                return result.get('response', '').strip()
+            else:
+                logger.error(f"Ollama API error: {response.status_code}")
+                return ""
+                
+        except Exception as e:
+            logger.error(f"Failed to query Ollama: {e}")
+            return ""
     
     def analyze_services(self, services: List[Service]) -> Dict[str, Any]:
         """
@@ -92,7 +141,7 @@ class AIAssistant:
             Dictionary with AI analysis and recommendations
         """
         if not self.enabled:
-            return {"enabled": False, "message": "Install GitHub Copilot for AI assistance"}
+            return {"enabled": False, "message": "Install Ollama for FREE AI assistance: https://ollama.com/download"}
         
         logger.info(f"🧠 AI analyzing {len(services)} microservices...")
         

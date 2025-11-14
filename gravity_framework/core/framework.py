@@ -31,7 +31,13 @@ class GravityFramework:
         >>> framework.start()
     """
     
-    def __init__(self, project_path: Optional[Path] = None, config: Optional[Dict] = None, ai_assist: bool = True):
+    def __init__(
+        self,
+        project_path: Optional[Path] = None,
+        config: Optional[Dict] = None,
+        ai_assist: bool = True,
+        ollama_model: str = "llama3.2:3b"
+    ):
         """
         Initialize the Gravity Framework.
         
@@ -39,7 +45,8 @@ class GravityFramework:
             project_path: Path to the Gravity project directory.
                          If None, uses current directory.
             config: Optional configuration dictionary
-            ai_assist: Enable AI-powered assistance (auto-detects GitHub Copilot)
+            ai_assist: Enable AI-powered assistance (auto-detects Ollama)
+            ollama_model: Ollama model to use (default: llama3.2:3b - fast & free)
         """
         self.project_path = Path(project_path) if project_path else Path.cwd()
         self.config = config or {}
@@ -49,7 +56,7 @@ class GravityFramework:
         self.scanner = ServiceScanner(self.project_path / "services")
         self.db_orchestrator = DatabaseOrchestrator(self.config.get("databases", {}))
         self.service_manager = ServiceManager()
-        self.ai = AIAssistant(enabled=ai_assist)  # FREE AI assistance via Copilot
+        self.ai = AIAssistant(enabled=ai_assist, ollama_model=ollama_model)  # FREE AI with Ollama
         
         self._plugins: Dict[str, Any] = {}
         
