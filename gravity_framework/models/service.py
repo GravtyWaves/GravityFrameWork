@@ -17,6 +17,14 @@ REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
 ================================================================================
 """
 
+from typing import Dict, List, Optional, Any
+from enum import Enum
+from pydantic import BaseModel, Field, field_validator, ConfigDict
+from datetime import datetime
+
+
+class ServiceType(str, Enum):
+    """Service types."""
     API = "api"
     WEB = "web"
     WORKER = "worker"

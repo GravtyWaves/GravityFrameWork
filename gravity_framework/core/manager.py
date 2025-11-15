@@ -17,6 +17,18 @@ REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
 ================================================================================
 """
 
+import docker
+from docker.models.containers import Container
+from typing import Dict, Optional, List
+import logging
+
+from gravity_framework.models.service import Service
+
+logger = logging.getLogger(__name__)
+
+
+class ServiceManager:
+    """Manages service lifecycle and operations."""
     
     def __init__(self, docker_client=None):
         """Initialize service manager.

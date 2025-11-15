@@ -37,7 +37,7 @@ from gravity_framework.git.integration import GitIntegration, GitHubIntegration
 from gravity_framework.git.commit_manager import CommitManager, AutoCommitScheduler
 from gravity_framework.standards.enforcer import StandardsEnforcer
 from gravity_framework.project.manager import ProjectManager
-from gravity_framework.learning.system import ContinuousLearningSystem, AIProvider
+from gravity_framework.learning.system import ContinuousLearningSystem, AIProvider, LearningEvent
 
 logger = logging.getLogger(__name__)
 
@@ -1543,22 +1543,19 @@ class GravityFramework:
         # Also record in learning system
         if self.learning:
             # Record schemas as learning event
-            self.learning.knowledge_base.record_event(
-                from gravity_framework.learning.system import LearningEvent
-                
-                event = LearningEvent(
-                    event_type='data_analysis',
-                    context={
-                        'services': list(insights['schemas'].keys()),
-                        'total_tables': sum(
-                            len(s.get('tables', {})) 
-                            for s in insights['schemas'].values()
-                        )
-                    },
-                    outcome='patterns_discovered',
-                    success=True
-                )
+            event = LearningEvent(
+                event_type='data_analysis',
+                context={
+                    'services': list(insights['schemas'].keys()),
+                    'total_tables': sum(
+                        len(s.get('tables', {})) 
+                        for s in insights['schemas'].values()
+                    )
+                },
+                outcome='patterns_discovered',
+                success=True
             )
+            self.learning.knowledge_base.record_event(event)
         
         return insights
     
@@ -1844,22 +1841,5 @@ class GravityFramework:
             'decision_method': 'Team consensus (no user input)',
             'minimum_approval': '50% weighted support'
         }
-                    'message': f'Deployment to {environment} failed'
-                }
-        
-        except subprocess.TimeoutExpired:
-            logger.error("Deployment timed out after 10 minutes")
-            return {
-                'success': False,
-                'error': 'Deployment timeout',
-                'message': 'Deployment timed out after 10 minutes'
-            }
-        except Exception as e:
-            logger.error(f"Deployment failed: {e}")
-            return {
-                'success': False,
-                'error': str(e),
-                'message': f'Deployment failed: {e}'
-            }
         
         return self.registry.get_all()

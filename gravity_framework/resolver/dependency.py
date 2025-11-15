@@ -17,6 +17,17 @@ REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
 ================================================================================
 """
 
+from typing import Dict, List, Set, Optional, Tuple
+from dataclasses import dataclass
+import logging
+
+from gravity_framework.models.service import Service, ServiceManifest
+
+logger = logging.getLogger(__name__)
+
+
+class VersionConstraint:
+    """Represents a version constraint."""
     
     def __init__(self, constraint: str):
         """Initialize version constraint.

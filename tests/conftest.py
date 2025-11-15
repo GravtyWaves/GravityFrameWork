@@ -16,6 +16,13 @@ REPOSITORY: https://github.com/GravtyWaves/GravityFrameWork
 ================================================================================
 """
 
+import pytest
+from pathlib import Path
+
+
+@pytest.fixture
+def test_project_dir(tmp_path):
+    """Create a temporary test project directory."""
     project_dir = tmp_path / "test_project"
     project_dir.mkdir()
     return project_dir
